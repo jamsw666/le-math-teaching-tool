@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<title>练习投影</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#1a2332;color:#1a1a1a;min-height:100vh}
+  .app{max-width:1280px;margin:0 auto;min-height:800px;background:#f4f6f9;display:flex;flex-direction:column}
+  .top{height:56px;background:#0f2744;color:#fff;display:flex;align-items:center;padding:0 20px;gap:16px}
+  .top .brand{font-weight:700;font-size:16px;letter-spacing:.02em}
+  .top .nav{display:flex;gap:8px;margin-left:24px}
+  .top .nav span{padding:6px 12px;border-radius:6px;font-size:13px;opacity:.75}
+  .top .nav span.on{background:#2b6cb0;opacity:1}
+  .top .right{margin-left:auto;display:flex;gap:10px;align-items:center;font-size:13px}
+  .btn{border:none;border-radius:8px;padding:8px 14px;font-size:13px;cursor:default;font-weight:600}
+  .btn-primary{background:#2b6cb0;color:#fff}
+  .btn-ghost{background:rgba(255,255,255,.12);color:#fff}
+  .btn-light{background:#fff;color:#0f2744;border:1px solid #d0d7e2}
+  .btn-warn{background:#dd6b20;color:#fff}
+  .btn-ok{background:#2f855a;color:#fff}
+  .main{flex:1;padding:20px;display:flex;gap:16px}
+  .card{background:#fff;border-radius:12px;border:1px solid #e2e8f0;box-shadow:0 1px 2px rgba(15,39,68,.06)}
+  .label{font-size:12px;color:#64748b;margin-bottom:6px}
+  .title{font-size:18px;font-weight:700;color:#0f2744}
+  .mute{color:#64748b;font-size:13px}
+  .chip{display:inline-block;padding:2px 8px;border-radius:999px;background:#ebf4ff;color:#2b6cb0;font-size:12px;font-weight:600}
+  .chip-green{background:#f0fff4;color:#2f855a}
+  .chip-orange{background:#fffaf0;color:#c05621}
+  .wire-tag{position:fixed;top:8px;right:8px;z-index:99;background:#dd6b20;color:#fff;font-size:11px;padding:4px 8px;border-radius:4px;font-weight:700}
+</style>
+</head>
+<body>
+<div class="wire-tag">原型线框 · 非工程</div>
+
+<div class="app" style="background:#0b1220">
+  <div class="top" style="background:#0b1220;border-bottom:1px solid #243044">
+    <div class="brand">练习模式 · 第1节</div>
+    <div class="right">
+      <button class="btn btn-ghost">✏ 批注</button>
+      <button class="btn btn-ok">显示答案</button>
+      <button class="btn btn-warn">退出投影</button>
+    </div>
+  </div>
+  <div class="main" style="padding:32px;justify-content:center">
+    <div style="width:900px;background:#111827;border-radius:20px;padding:36px;color:#f8fafc;border:1px solid #334155">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="font-size:14px;color:#93c5fd">练习 2 / 3</div>
+        <span class="chip-orange chip" style="background:#7c2d12;color:#fed7aa">答案已隐藏</span>
+      </div>
+      <div style="font-size:30px;font-weight:700;line-height:1.5;margin-top:20px">若 f(x)=3x+1，求 f′(x)。</div>
+      <div style="margin-top:40px;min-height:120px;border:2px dashed #475569;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#64748b;font-size:16px">
+        答案区域（对学生不可见，点「显示答案」后出现）
+      </div>
+      <div style="margin-top:28px;display:flex;gap:12px">
+        <button class="btn btn-light">上一题</button>
+        <button class="btn btn-light">下一题</button>
+        <button class="btn btn-primary" style="margin-left:auto">显示答案</button>
+        <button class="btn btn-ghost">返回讲题</button>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

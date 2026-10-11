@@ -1,0 +1,9 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "默认能力：本机课时读写（无远程）",
+  "windows": ["main"],
+  "permissions": [
+    "core:default"
+  ]
+}

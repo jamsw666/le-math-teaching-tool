@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<title>概念 + 示例图</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#1a2332;color:#1a1a1a;min-height:100vh}
+  .app{max-width:1280px;margin:0 auto;min-height:800px;background:#f4f6f9;display:flex;flex-direction:column}
+  .top{height:56px;background:#0f2744;color:#fff;display:flex;align-items:center;padding:0 20px;gap:16px}
+  .brand{font-weight:700;font-size:16px}
+  .nav{display:flex;gap:8px;margin-left:24px}
+  .nav span{padding:6px 12px;border-radius:6px;font-size:13px;opacity:.75}
+  .nav span.on{background:#2b6cb0;opacity:1}
+  .right{margin-left:auto;display:flex;gap:10px;align-items:center;font-size:13px}
+  .btn{border:none;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:600}
+  .btn-primary{background:#2b6cb0;color:#fff}
+  .btn-ghost{background:rgba(255,255,255,.12);color:#fff}
+  .btn-light{background:#fff;color:#0f2744;border:1px solid #d0d7e2}
+  .main{flex:1;padding:20px;display:flex;gap:16px}
+  .card{background:#fff;border-radius:12px;border:1px solid #e2e8f0;box-shadow:0 1px 2px rgba(15,39,68,.06)}
+  .label{font-size:12px;color:#64748b;margin-bottom:6px}
+  .title{font-size:18px;font-weight:700;color:#0f2744}
+  .mute{color:#64748b;font-size:13px}
+  .chip{display:inline-block;padding:2px 8px;border-radius:999px;background:#ebf4ff;color:#2b6cb0;font-size:12px;font-weight:600}
+  .wire-tag{position:fixed;top:8px;right:8px;z-index:99;background:#dd6b20;color:#fff;font-size:11px;padding:4px 8px;border-radius:4px;font-weight:700}
+  .bullet{padding:8px 10px;border-radius:8px;border:1px solid #e2e8f0;margin-bottom:8px;font-size:14px}
+  .bullet.on{border-color:#2b6cb0;background:#f7fbff;font-weight:600}
+  .bullet.dim{opacity:.45}
+</style>
+</head>
+<body>
+<div class="wire-tag">原型线框 · 非工程</div>
+<div class="app">
+  <div class="top">
+    <div class="brand">第1节 · 导数的概念</div>
+    <div class="nav"><span>编辑</span><span class="on">投影 · 概念</span></div>
+    <div class="right">
+      <button class="btn btn-ghost">上一步</button>
+      <button class="btn btn-primary">下一步</button>
+      <button class="btn btn-ghost">跳过动画</button>
+    </div>
+  </div>
+  <div class="main">
+    <div class="card" style="flex:1.2;padding:22px;display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="title">概念：瞬时变化率</div>
+        <span class="chip">示例图诠释</span>
+      </div>
+      <div class="bullet on">① 平均变化率：一段时间内「整体有多快」</div>
+      <div class="bullet on">② 把时间段不断缩短 → 逼近某一瞬间</div>
+      <div class="bullet dim">③ （下一步）极限存在时，称为该点的导数</div>
+      <div style="margin-top:auto;display:flex;gap:8px">
+        <button class="btn btn-light">显示定义卡</button>
+        <button class="btn btn-light">答案：隐藏</button>
+      </div>
+    </div>
+    <div class="card" style="flex:1;padding:16px;display:flex;flex-direction:column">
+      <div class="label">示例图 · 诠释当前概念（跟「下一步」同拍）</div>
+      <div style="flex:1;background:#0f2744;border-radius:10px;padding:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px">
+        <svg width="340" height="220" viewBox="0 0 340 220">
+          <rect x="0" y="0" width="340" height="220" rx="8" fill="#132a46"/>
+          <line x1="40" y1="180" x2="310" y2="180" stroke="#64748b" stroke-width="2"/>
+          <line x1="40" y1="180" x2="40" y2="30" stroke="#64748b" stroke-width="2"/>
+          <text x="300" y="198" fill="#94a3b8" font-size="12">x</text>
+          <text x="18" y="40" fill="#94a3b8" font-size="12">y</text>
+          <!-- curve -->
+          <path d="M50 160 C 120 140, 160 40, 290 50" fill="none" stroke="#63b3ed" stroke-width="3"/>
+          <!-- secant -->
+          <line x1="90" y1="148" x2="210" y2="70" stroke="#f6ad55" stroke-width="2.5" stroke-dasharray="6 4"/>
+          <circle cx="90" cy="148" r="5" fill="#f6ad55"/>
+          <circle cx="210" cy="70" r="5" fill="#f6ad55"/>
+          <text x="150" y="95" fill="#f6ad55" font-size="12">平均变化率</text>
+          <!-- tangent emerging -->
+          <line x1="160" y1="110" x2="280" y2="55" stroke="#68d391" stroke-width="3"/>
+          <circle cx="200" cy="88" r="6" fill="#68d391"/>
+          <text x="210" y="120" fill="#68d391" font-size="12">逼近切线 / 瞬时</text>
+        </svg>
+        <p style="color:#cbd5e1;font-size:13px;text-align:center;max-width:300px">割线斜率 → 切线斜率：用图把「平均」过渡到「瞬时」讲清楚。</p>
+      </div>
+      <p class="mute" style="margin-top:10px">概念卡逐步揭示时，右侧图同步高亮对应元素；避免只贴定义文字。</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<title>投影批注</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#1a2332;color:#1a1a1a;min-height:100vh}
+  .app{max-width:1280px;margin:0 auto;min-height:800px;background:#f4f6f9;display:flex;flex-direction:column}
+  .top{height:56px;background:#0f2744;color:#fff;display:flex;align-items:center;padding:0 20px;gap:16px}
+  .top .brand{font-weight:700;font-size:16px;letter-spacing:.02em}
+  .top .nav{display:flex;gap:8px;margin-left:24px}
+  .top .nav span{padding:6px 12px;border-radius:6px;font-size:13px;opacity:.75}
+  .top .nav span.on{background:#2b6cb0;opacity:1}
+  .top .right{margin-left:auto;display:flex;gap:10px;align-items:center;font-size:13px}
+  .btn{border:none;border-radius:8px;padding:8px 14px;font-size:13px;cursor:default;font-weight:600}
+  .btn-primary{background:#2b6cb0;color:#fff}
+  .btn-ghost{background:rgba(255,255,255,.12);color:#fff}
+  .btn-light{background:#fff;color:#0f2744;border:1px solid #d0d7e2}
+  .btn-warn{background:#dd6b20;color:#fff}
+  .btn-ok{background:#2f855a;color:#fff}
+  .main{flex:1;padding:20px;display:flex;gap:16px}
+  .card{background:#fff;border-radius:12px;border:1px solid #e2e8f0;box-shadow:0 1px 2px rgba(15,39,68,.06)}
+  .label{font-size:12px;color:#64748b;margin-bottom:6px}
+  .title{font-size:18px;font-weight:700;color:#0f2744}
+  .mute{color:#64748b;font-size:13px}
+  .chip{display:inline-block;padding:2px 8px;border-radius:999px;background:#ebf4ff;color:#2b6cb0;font-size:12px;font-weight:600}
+  .chip-green{background:#f0fff4;color:#2f855a}
+  .chip-orange{background:#fffaf0;color:#c05621}
+  .wire-tag{position:fixed;top:8px;right:8px;z-index:99;background:#dd6b20;color:#fff;font-size:11px;padding:4px 8px;border-radius:4px;font-weight:700}
+</style>
+</head>
+<body>
+<div class="wire-tag">原型线框 · 非工程</div>
+
+<div class="app" style="background:#0b1220">
+  <div class="top" style="background:#0b1220;border-bottom:1px solid #243044">
+    <div class="brand">投影中 · 批注已开启</div>
+    <div class="right" style="gap:8px">
+      <button class="btn btn-primary">✏ 画笔开</button>
+      <button class="btn btn-ghost" style="width:28px;height:28px;padding:0;border-radius:50%;background:#ef4444"></button>
+      <button class="btn btn-ghost" style="width:28px;height:28px;padding:0;border-radius:50%;background:#fbbf24"></button>
+      <button class="btn btn-ghost" style="width:28px;height:28px;padding:0;border-radius:50%;background:#60a5fa"></button>
+      <button class="btn btn-ghost">粗</button>
+      <button class="btn btn-ghost">细</button>
+      <button class="btn btn-light">清空批注</button>
+      <button class="btn btn-warn">退出投影</button>
+    </div>
+  </div>
+  <div class="main" style="padding:28px;position:relative">
+    <div style="flex:1;background:#111827;border-radius:16px;padding:28px;color:#f8fafc;border:1px solid #334155;position:relative;overflow:hidden">
+      <div style="font-size:14px;color:#93c5fd;margin-bottom:12px">例题 1 / 2 · 步骤 2</div>
+      <div style="font-size:26px;font-weight:700;line-height:1.5;max-width:70%">= [f(1+h) − f(1)] / h</div>
+      <div style="margin-top:24px;font-size:18px;color:#e2e8f0">强调：分母是间隔 h，分子是函数值差。</div>
+      <!-- fake ink strokes via SVG -->
+      <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none" viewBox="0 0 900 500">
+        <ellipse cx="420" cy="120" rx="210" ry="70" fill="none" stroke="#ef4444" stroke-width="4" transform="rotate(-6 420 120)"/>
+        <path d="M120 280 Q 200 240 280 300 T 420 290" fill="none" stroke="#fbbf24" stroke-width="5" stroke-linecap="round"/>
+        <path d="M500 200 L 560 320" fill="none" stroke="#60a5fa" stroke-width="4"/>
+        <text x="570" y="330" fill="#60a5fa" font-size="22" font-family="Segoe UI">h≠0</text>
+      </svg>
+      <div style="margin-top:80px;display:flex;gap:12px">
+        <button class="btn btn-light">上一步</button>
+        <button class="btn btn-primary">下一步</button>
+        <button class="btn btn-ghost">跳过动画</button>
+      </div>
+    </div>
+    <div style="position:absolute;bottom:40px;right:48px;background:#1e293b;color:#cbd5e1;padding:10px 14px;border-radius:8px;font-size:12px;border:1px solid #334155">
+      批注为讲解层 · 可清空 · 不挡步进按钮
+    </div>
+  </div>
+</div>
+</body>
+</html>

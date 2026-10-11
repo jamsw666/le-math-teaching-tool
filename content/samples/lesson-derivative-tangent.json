@@ -1,0 +1,130 @@
+{
+  "id": "sample-derivative-tangent-01",
+  "title": "导数与切线（自编样例）",
+  "chapter": "函数与导数 · 切线的几何意义",
+  "tags": ["函数与导数", "切线", "自编样例"],
+  "copyright": "本示例为团队原创教学演示内容，非人教社或其他出版社教材原文；与任何教材无官方附属关系。",
+  "steps": [
+    {
+      "id": "step-concept-1",
+      "ordinal": 0,
+      "kind": "concept",
+      "content": {
+        "title": "切线在说什么？",
+        "blocks": [
+          {
+            "kind": "text",
+            "text": "在某一点附近，曲线的「瞬时陡峭程度」可以用一条直线来描述，这条直线叫切线。"
+          }
+        ],
+        "animateOnReveal": true
+      }
+    },
+    {
+      "id": "step-concept-2",
+      "ordinal": 1,
+      "kind": "concept",
+      "content": {
+        "title": "导数与斜率",
+        "blocks": [
+          {
+            "kind": "text",
+            "text": "函数在该点的导数，等于切线的斜率。"
+          },
+          {
+            "kind": "template",
+            "templateId": "derivative_at_point",
+            "slots": { "f": "f", "x0": "x_0" },
+            "texInternal": "f'(x_0)=k_{\\text{切线}}"
+          }
+        ],
+        "animateOnReveal": true
+      }
+    },
+    {
+      "id": "step-example-1",
+      "ordinal": 2,
+      "kind": "example",
+      "content": {
+        "title": "例：求切线斜率",
+        "blocks": [
+          {
+            "kind": "text",
+            "text": "已知 f(x)=x²，求在 x=1 处切线的斜率。"
+          }
+        ],
+        "animateOnReveal": false
+      }
+    },
+    {
+      "id": "step-example-2",
+      "ordinal": 3,
+      "kind": "example",
+      "content": {
+        "title": "第一步：写导数",
+        "blocks": [
+          {
+            "kind": "template",
+            "templateId": "power_rule",
+            "slots": { "n": "2" },
+            "texInternal": "f'(x)=2x"
+          }
+        ],
+        "animateOnReveal": true
+      }
+    },
+    {
+      "id": "step-example-3",
+      "ordinal": 4,
+      "kind": "example",
+      "content": {
+        "title": "第二步：代入点",
+        "blocks": [
+          {
+            "kind": "template",
+            "templateId": "eval_at",
+            "slots": { "expr": "2x", "x": "1", "result": "2" },
+            "texInternal": "f'(1)=2\\cdot 1=2"
+          }
+        ],
+        "animateOnReveal": true
+      }
+    },
+    {
+      "id": "step-exercise-1",
+      "ordinal": 5,
+      "kind": "exercise",
+      "content": {
+        "title": "随堂练",
+        "blocks": [
+          {
+            "kind": "text",
+            "text": "若 g(x)=x³，则在 x=2 处切线斜率是多少？"
+          }
+        ],
+        "answerBlocks": [
+          {
+            "kind": "text",
+            "text": "g'(x)=3x²，g'(2)=12。"
+          }
+        ],
+        "animateOnReveal": false
+      }
+    },
+    {
+      "id": "step-board-1",
+      "ordinal": 6,
+      "kind": "board",
+      "content": {
+        "title": "板书注意",
+        "blocks": [
+          {
+            "kind": "text",
+            "text": "切线斜率 = 该点导数；先求导再代入，不要颠倒顺序。"
+          }
+        ],
+        "animateOnReveal": false
+      }
+    }
+  ]
+}

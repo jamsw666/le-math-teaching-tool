@@ -1,0 +1,21 @@
+{
+  "name": "@math-teaching-tool/core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./types": "./src/types.ts",
+    "./repository": "./src/repository.ts"
+  },
+  "scripts": {
+    "seed": "node storage/seed-from-samples.mjs",
+    "query": "node storage/query-demo.mjs",
+    "demo": "npm run seed && npm run query"
+  },
+  "dependencies": {
+    "sql.js": "^1.14.2"
+  }
+}

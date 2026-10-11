@@ -1,0 +1,9 @@
+{
+  "$comment": "合入完整 tauri.conf.json 的 build 段；frontendDist 相对本文件所在 src-tauri/",
+  "build": {
+    "frontendDist": "../apps/web/dist",
+    "devUrl": "http://127.0.0.1:5173",
+    "beforeDevCommand": "npm run dev --prefix ../apps/web",
+    "beforeBuildCommand": "npm run prepare:tauri --prefix ../apps/web"
+  }
+}

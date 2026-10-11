@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>数学课辅 · 界面线框原型</title>
+  <link rel="stylesheet" href="wireframes.css" />
+</head>
+<body>
+  <header class="top">
+    <h1>高中数学教学辅助工具 · 界面线框（静态）</h1>
+    <p class="meta">前端协助产品 · 不跑业务逻辑 · 2026-10-11 · <strong>无专业排版术语文案</strong> · 含投影批注与公式可视化编辑</p>
+    <nav class="tabs">
+      <a class="active" href="index.html">① 课时列表</a>
+      <a href="workbench.html">② 课时工作台</a>
+      <a href="projection.html">③ 投影 + 批注</a>
+      <a href="formula-editor.html">④ 公式可视化编辑</a>
+    </nav>
+  </header>
+
+  <main class="frame">
+    <div class="chrome">
+      <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+      <span class="title">课时列表</span>
+    </div>
+    <div class="app">
+      <aside class="sidebar">
+        <div class="brand">数学课辅</div>
+        <button class="primary">＋ 新建课时</button>
+        <p class="hint">内置样例 · 自建</p>
+      </aside>
+      <section class="content">
+        <h2>选择课时开始上课 / 备课</h2>
+        <div class="cards">
+          <article class="card">
+            <span class="tag">内置样例</span>
+            <h3>函数的概念与表示</h3>
+            <p>人教方向自编演示 · 概念卡 + 例题分步</p>
+            <footer><button>打开</button><button class="ghost">投影</button></footer>
+          </article>
+          <article class="card">
+            <span class="tag">内置样例</span>
+            <h3>导数与切线</h3>
+            <p>切线斜率 · 分步推理动画 · 随堂练习</p>
+            <footer><button>打开</button><button class="ghost">投影</button></footer>
+          </article>
+          <article class="card dashed">
+            <h3>＋ 自建课时</h3>
+            <p>新建空课时，稍后用模板填例题</p>
+          </article>
+        </div>
+        <p class="footnote">示例为原创教学演示，与出版社教材无官方附属关系。</p>
+      </section>
+    </div>
+  </main>
+  <p class="note">线框说明：进入以「打开 / 投影」为主路径；无账号。</p>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>课时工作台 · 线框</title>
+  <link rel="stylesheet" href="wireframes.css" />
+</head>
+<body>
+  <header class="top">
+    <h1>高中数学教学辅助工具 · 界面线框（静态）</h1>
+    <nav class="tabs">
+      <a href="index.html">① 课时列表</a>
+      <a class="active" href="workbench.html">② 课时工作台</a>
+      <a href="projection.html">③ 投影 + 批注</a>
+      <a href="formula-editor.html">④ 公式可视化编辑</a>
+    </nav>
+  </header>
+
+  <main class="frame wide">
+    <div class="chrome">
+      <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+      <span class="title">课时：导数与切线（样例） · 编辑态</span>
+      <div class="chrome-actions">
+        <button class="ghost">字号</button>
+        <button class="primary">投影</button>
+      </div>
+    </div>
+    <div class="app workbench">
+      <section class="pane main-pane">
+        <div class="block">
+          <h3>例题</h3>
+          <p class="stem">求曲线 y = x² 在点 (1, 1) 处的切线方程。</p>
+          <div class="steps">
+            <div class="step done">① 写出切点与函数</div>
+            <div class="step current">② 计算导数得斜率 <span class="formula-chip">y′ = 2x → 2</span></div>
+            <div class="step muted">③ 点斜式写出切线（未揭示）</div>
+          </div>
+          <div class="toolbar">
+            <button>上一步</button>
+            <button class="primary">下一步</button>
+            <button class="ghost">跳过动画</button>
+            <button class="ghost">答案：显示/隐藏</button>
+          </div>
+        </div>
+        <div class="block">
+          <h3>练习（答案默藏）</h3>
+          <p>求 y = x³ 在 x = 2 的切线斜率。</p>
+          <button class="ghost">显示答案</button>
+        </div>
+      </section>
+      <aside class="pane side-pane">
+        <div class="block">
+          <h3>要点卡片</h3>
+          <ul class="bullets">
+            <li class="revealed">切线斜率 = 该点导数值</li>
+            <li class="revealed">点斜式：y − y₀ = k(x − x₀)</li>
+            <li class="muted">（下一步揭示）注意切点必须在曲线上</li>
+          </ul>
+        </div>
+        <div class="block">
+          <h3>板书块</h3>
+          <div class="board">定义 / 注意 · 模板</div>
+        </div>
+        <div class="block">
+          <h3>公式编辑</h3>
+          <p class="hint">点选模板 · 在公式区点哪里改哪里 · <a href="formula-editor.html">打开公式编辑</a></p>
+          <div class="keypad">
+            <button>分式</button><button>根号</button><button>指数</button><button>导数 ′</button>
+            <button>x</button><button>y</button><button>+</button><button>=</button>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+  <p class="note">关键步骤动画：下一步时当前步高亮并淡入；「跳过动画」直接到终态。未揭示步骤不可见（灰显仅线框示意）。</p>
+</body>
+</html>

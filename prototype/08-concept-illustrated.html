@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<title>概念 · 生动示例</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#0b1220}
+.wire-tag{position:fixed;top:8px;right:8px;z-index:99;background:#dd6b20;color:#fff;font-size:11px;padding:4px 8px;border-radius:4px;font-weight:700}
+.app{width:1280px;height:800px;margin:0 auto;display:flex;flex-direction:column;background:#0b1220;color:#f8fafc}
+.top{height:52px;background:#0b1220;border-bottom:1px solid #243044;display:flex;align-items:center;padding:0 18px;gap:12px}
+.brand{font-weight:700}.spacer{flex:1}
+.btn{border:none;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:600}
+.btn-g{background:rgba(255,255,255,.1);color:#e2e8f0}.btn-p{background:#2b6cb0;color:#fff}
+.main{flex:1;display:grid;grid-template-columns:1.1fr 1fr;gap:16px;padding:18px}
+.panel{background:#111827;border:1px solid #334155;border-radius:16px;padding:18px;display:flex;flex-direction:column}
+.h{font-size:13px;color:#93c5fd;margin-bottom:8px}
+.title{font-size:22px;font-weight:800;margin-bottom:10px}
+.body{font-size:15px;line-height:1.7;color:#e2e8f0}
+.illus{margin-top:14px;background:#0f172a;border-radius:12px;border:1px solid #334155;padding:12px;flex:1;display:flex;flex-direction:column}
+.caption{font-size:12px;color:#94a3b8;margin-top:8px;text-align:center}
+.steps{display:flex;gap:8px;margin-top:14px}
+.steps button{flex:1}
+.side-list{display:flex;flex-direction:column;gap:10px}
+.card{background:#1e293b;border-radius:12px;padding:12px;border:1px solid #334155}
+.card.on{border-color:#38bdf8;box-shadow:0 0 0 1px #38bdf8}
+.card h4{font-size:14px;margin-bottom:4px}
+.card p{font-size:12px;color:#94a3b8;line-height:1.45}
+.badge{display:inline-block;font-size:10px;padding:2px 6px;border-radius:4px;background:#164e63;color:#a5f3fc;margin-bottom:6px}
+</style>
+</head>
+<body>
+<div class="wire-tag">原型线框 · 非工程</div>
+<div class="app">
+  <div class="top">
+    <div class="brand">投影中 · 概念讲解</div>
+    <span style="font-size:12px;color:#94a3b8">导数的概念 · 生动示例</span>
+    <div class="spacer"></div>
+    <button class="btn btn-g">上一步</button>
+    <button class="btn btn-p">下一步</button>
+    <button class="btn btn-g">跳过动画</button>
+    <button class="btn btn-g">✏ 批注</button>
+  </div>
+  <div class="main">
+    <div class="panel">
+      <div class="h">概念卡 · 当前揭示 2 / 3</div>
+      <div class="title">瞬时变化率 ≈ 导数的直观意义</div>
+      <div class="body">把「一段时间的平均快慢」的时间间隔不断缩短，得到的极限快慢，就是该时刻的<strong style="color:#fde68a">瞬时变化率</strong>。在图像上，它对应<strong style="color:#fde68a">切线的斜率</strong>。</div>
+      <div class="illus">
+        <svg viewBox="0 0 560 280" width="100%" height="100%" preserveAspectRatio="xMidYMid meet">
+          <rect width="560" height="280" rx="8" fill="#020617"/>
+          <!-- axes -->
+          <line x1="50" y1="240" x2="520" y2="240" stroke="#475569" stroke-width="2"/>
+          <line x1="50" y1="240" x2="50" y2="30" stroke="#475569" stroke-width="2"/>
+          <text x="510" y="255" fill="#94a3b8" font-size="12">x</text>
+          <text x="30" y="40" fill="#94a3b8" font-size="12">y</text>
+          <!-- curve y=x^2 style -->
+          <path d="M70 230 Q 180 220 260 140 T 480 40" fill="none" stroke="#38bdf8" stroke-width="3"/>
+          <!-- secant -->
+          <line x1="180" y1="195" x2="360" y2="95" stroke="#fb923c" stroke-width="2" stroke-dasharray="6 4"/>
+          <text x="300" y="85" fill="#fb923c" font-size="13">割线 · 平均变化率</text>
+          <!-- tangent -->
+          <line x1="200" y1="190" x2="420" y2="80" stroke="#fbbf24" stroke-width="3"/>
+          <circle cx="280" cy="145" r="6" fill="#fbbf24"/>
+          <text x="290" y="160" fill="#fbbf24" font-size="13">切点 · 瞬时（导数）</text>
+          <!-- zoom hint -->
+          <rect x="380" y="180" width="150" height="70" rx="8" fill="#111827" stroke="#334155"/>
+          <text x="395" y="205" fill="#94a3b8" font-size="11">间隔越来越短</text>
+          <text x="395" y="225" fill="#e2e8f0" font-size="12">割线 → 切线</text>
+          <text x="395" y="242" fill="#67e8f9" font-size="11">关键步骤动画可跳过</text>
+        </svg>
+        <div class="caption">示例图：用「割线变切线」诠释导数，而不是干巴巴贴定义</div>
+      </div>
+      <div class="steps">
+        <button class="btn btn-g">揭示上一要点</button>
+        <button class="btn btn-p">揭示下一要点</button>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="h">本课概念目录（可点切换示例图）</div>
+      <div class="side-list">
+        <div class="card">
+          <div class="badge">示例图 · 生活</div>
+          <h4>① 平均变化率</h4>
+          <p>整段路程的「平均速度」——先建立直觉。</p>
+        </div>
+        <div class="card on">
+          <div class="badge">示例图 · 图像</div>
+          <h4>② 瞬时变化率（当前）</h4>
+          <p>间隔缩短 → 切线斜率；左侧大图正在讲这一条。</p>
+        </div>
+        <div class="card">
+          <div class="badge">示例图 · 符号</div>
+          <h4>③ 导数记号直觉</h4>
+          <p>用模板公式展示 f′(x) 表示「在 x 处的瞬时快慢」。</p>
+        </div>
+        <div class="card" style="border-style:dashed;opacity:.85">
+          <div class="badge">可自建</div>
+          <h4>＋ 老师补充概念卡</h4>
+          <p>上传或点选示意图，让抽象概念「看得见」。</p>
+        </div>
+      </div>
+      <p style="margin-top:auto;padding-top:12px;font-size:12px;color:#64748b">产品要求：概念区必须配生动示例图；禁止只有文字定义。</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>

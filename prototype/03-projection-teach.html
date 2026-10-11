@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<title>投影讲题</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#1a2332;color:#1a1a1a;min-height:100vh}
+  .app{max-width:1280px;margin:0 auto;min-height:800px;background:#f4f6f9;display:flex;flex-direction:column}
+  .top{height:56px;background:#0f2744;color:#fff;display:flex;align-items:center;padding:0 20px;gap:16px}
+  .top .brand{font-weight:700;font-size:16px;letter-spacing:.02em}
+  .top .nav{display:flex;gap:8px;margin-left:24px}
+  .top .nav span{padding:6px 12px;border-radius:6px;font-size:13px;opacity:.75}
+  .top .nav span.on{background:#2b6cb0;opacity:1}
+  .top .right{margin-left:auto;display:flex;gap:10px;align-items:center;font-size:13px}
+  .btn{border:none;border-radius:8px;padding:8px 14px;font-size:13px;cursor:default;font-weight:600}
+  .btn-primary{background:#2b6cb0;color:#fff}
+  .btn-ghost{background:rgba(255,255,255,.12);color:#fff}
+  .btn-light{background:#fff;color:#0f2744;border:1px solid #d0d7e2}
+  .btn-warn{background:#dd6b20;color:#fff}
+  .btn-ok{background:#2f855a;color:#fff}
+  .main{flex:1;padding:20px;display:flex;gap:16px}
+  .card{background:#fff;border-radius:12px;border:1px solid #e2e8f0;box-shadow:0 1px 2px rgba(15,39,68,.06)}
+  .label{font-size:12px;color:#64748b;margin-bottom:6px}
+  .title{font-size:18px;font-weight:700;color:#0f2744}
+  .mute{color:#64748b;font-size:13px}
+  .chip{display:inline-block;padding:2px 8px;border-radius:999px;background:#ebf4ff;color:#2b6cb0;font-size:12px;font-weight:600}
+  .chip-green{background:#f0fff4;color:#2f855a}
+  .chip-orange{background:#fffaf0;color:#c05621}
+  .wire-tag{position:fixed;top:8px;right:8px;z-index:99;background:#dd6b20;color:#fff;font-size:11px;padding:4px 8px;border-radius:4px;font-weight:700}
+</style>
+</head>
+<body>
+<div class="wire-tag">原型线框 · 非工程</div>
+
+<div class="app" style="background:#0b1220">
+  <div class="top" style="background:#0b1220;border-bottom:1px solid #243044">
+    <div class="brand">投影中 · 第1节 导数的概念</div>
+    <div class="right">
+      <button class="btn btn-ghost">✏ 批注</button>
+      <button class="btn btn-ghost">字号 ●●●</button>
+      <button class="btn btn-warn">退出投影</button>
+    </div>
+  </div>
+  <div class="main" style="padding:28px;gap:20px">
+    <div style="flex:1.4;background:#111827;border-radius:16px;padding:28px;color:#f8fafc;border:1px solid #334155">
+      <div style="font-size:14px;color:#93c5fd;margin-bottom:12px">例题 1 / 2</div>
+      <div style="font-size:28px;font-weight:700;line-height:1.45">已知 f(x)=x²，求从 x=1 到 x=1+h 的平均变化率。</div>
+      <div style="margin-top:36px;padding:20px;border-radius:12px;background:#1e293b;border:1px solid #334155">
+        <div style="font-size:14px;color:#94a3b8;margin-bottom:8px">当前步骤 2 / 3</div>
+        <div style="font-size:26px;color:#fde68a">= [f(1+h) − f(1)] / h</div>
+        <div style="margin-top:10px;font-size:13px;color:#64748b">（上一步公式已淡出 · 本步高亮）</div>
+      </div>
+      <div style="margin-top:28px;display:flex;gap:12px;align-items:center">
+        <button class="btn btn-light">上一步</button>
+        <button class="btn btn-primary">下一步</button>
+        <button class="btn btn-ghost">跳过动画</button>
+        <span style="margin-left:auto;color:#94a3b8;font-size:13px">答案：隐藏中</span>
+      </div>
+    </div>
+    <div style="width:320px;display:flex;flex-direction:column;gap:16px">
+      <div style="background:#111827;border-radius:16px;padding:20px;color:#f8fafc;border:1px solid #334155;flex:1">
+        <div style="font-size:13px;color:#93c5fd;margin-bottom:10px">要点卡片</div>
+        <div style="font-size:18px;font-weight:700;margin-bottom:12px">平均变化率</div>
+        <div style="font-size:15px;line-height:1.7;color:#e2e8f0">表示函数在某一段上的「平均快慢」。</div>
+        <div style="margin-top:16px;padding:10px;border-radius:8px;background:#1e293b;font-size:14px;color:#cbd5e1">注意：先平均，再过渡到瞬时（导数）。</div>
+      </div>
+      <div style="background:#111827;border-radius:12px;padding:12px;color:#94a3b8;font-size:12px;text-align:center;border:1px solid #334155">
+        底栏：上一题 · 下一题 · 练习 · 退出
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

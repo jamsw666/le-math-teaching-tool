@@ -1,0 +1,39 @@
+
+# deps / build
+node_modules/
+dist/
+**/dist/
+apps/web/dist/
+target/
+src-tauri/target/
+src-tauri/gen/
+
+# data / secrets
+*.db
+*.db-journal
+*.sqlite
+packages/core/storage/data/
+.env
+.env.*
+!.env.example
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+
+# IDE / tooling
+.idea/
+.vscode/
+.cache/
+.npm/
+*.swp
+*.log
+
+# installers
+*.AppImage
+*.dmg
+*.exe
+*.msi
+*.nsis.zip

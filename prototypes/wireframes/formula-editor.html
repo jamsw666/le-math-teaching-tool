@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>公式可视化编辑 · 线框</title>
+  <link rel="stylesheet" href="wireframes.css" />
+</head>
+<body>
+  <header class="top">
+    <h1>高中数学教学辅助工具 · 界面线框（静态）</h1>
+    <nav class="tabs">
+      <a href="index.html">① 课时列表</a>
+      <a href="workbench.html">② 课时工作台</a>
+      <a href="projection.html">③ 投影 + 批注</a>
+      <a class="active" href="formula-editor.html">④ 公式可视化编辑</a>
+    </nav>
+  </header>
+
+  <main class="frame">
+    <div class="chrome">
+      <span class="title">公式编辑</span>
+      <div class="chrome-actions"><button class="ghost">取消</button><button class="primary">完成</button></div>
+    </div>
+    <div class="app formula-ui">
+      <div class="preview-box">
+        <p class="label">公式编辑区 · 点哪里改哪里</p>
+        <div class="preview big editable" title="点击槽位编辑">
+          <span class="frac"><span class="num">d<span class="slot active">y</span></span><span class="den">d<span class="slot">x</span></span></span>
+          <span> = </span>
+          <span class="slot wide">2x</span>
+        </div>
+        <p class="hint">在上方公式区点选结构或填空槽即可修改；无需输入命令。</p>
+      </div>
+      <div class="templates">
+        <p class="label">点选模板</p>
+        <div class="keypad wrap">
+          <button>分式</button><button>根号</button><button>上下标</button>
+          <button>导数 ′</button><button>极限</button><button>三角函数</button>
+          <button>指数</button><button>对数</button><button>括号</button>
+        </div>
+      </div>
+      <div class="calc">
+        <p class="label">符号键（像计算器）</p>
+        <div class="keypad wrap">
+          <button>7</button><button>8</button><button>9</button><button>+</button>
+          <button>4</button><button>5</button><button>6</button><button>−</button>
+          <button>1</button><button>2</button><button>3</button><button>×</button>
+          <button>0</button><button>x</button><button>y</button><button>÷</button>
+          <button>(</button><button>)</button><button>=</button><button>⌫</button>
+        </div>
+      </div>
+    </div>
+  </main>
+  <p class="note">验收：界面文案仅用「公式编辑 / 点选模板 / 符号键」；不出现专业排版或引擎名称。</p>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "name": "math-teaching-tool-workspace",
+  "private": true,
+  "version": "0.1.0",
+  "description": "阿乐老师的数学课堂 — 根脚本（Tauri 打包入口）",
+  "scripts": {
+    "web:dev": "npm --prefix apps/web run dev",
+    "web:build": "npm --prefix apps/web run prepare:tauri",
+    "tauri": "tauri --config src-tauri/tauri.conf.json",
+    "tauri:dev": "tauri dev --config src-tauri/tauri.conf.json -- --features desktop",
+    "tauri:build": "tauri build --config src-tauri/tauri.conf.json -- --features desktop",
+    "test:storage": "cargo test --manifest-path src-tauri/Cargo.toml"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.0.0"
+  }
+}

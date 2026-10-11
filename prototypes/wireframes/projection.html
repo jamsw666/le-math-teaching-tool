@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>投影 + 批注 · 线框</title>
+  <link rel="stylesheet" href="wireframes.css" />
+</head>
+<body>
+  <header class="top">
+    <h1>高中数学教学辅助工具 · 界面线框（静态）</h1>
+    <nav class="tabs">
+      <a href="index.html">① 课时列表</a>
+      <a href="workbench.html">② 课时工作台</a>
+      <a class="active" href="projection.html">③ 投影 + 批注</a>
+      <a href="formula-editor.html">④ 公式可视化编辑</a>
+    </nav>
+  </header>
+
+  <main class="frame project">
+    <div class="chrome dark">
+      <span class="title">投影模式 · 导数与切线</span>
+      <div class="chrome-actions">
+        <button class="ghost">字号</button>
+        <button class="ghost">退出投影</button>
+      </div>
+    </div>
+
+    <!-- 批注工具条：与主路径分离 -->
+    <div class="annotate-bar">
+      <span class="tool-label">批注</span>
+      <button class="primary" title="示意：开">画笔：开</button>
+      <button class="ghost">画笔：关</button>
+      <span class="sep">|</span>
+      <span class="mini">颜色</span>
+      <button class="swatch red active" title="红"></button>
+      <button class="swatch yellow" title="黄"></button>
+      <button class="swatch blue" title="蓝"></button>
+      <span class="sep">|</span>
+      <span class="mini">粗细</span>
+      <button class="ghost">细</button>
+      <button class="primary">中</button>
+      <button class="ghost">粗</button>
+      <span class="sep">|</span>
+      <button class="ghost warn-btn">一键清空</button>
+      <span class="hint-inline">切题时：本页批注清空（会话级）</span>
+    </div>
+
+    <div class="projection-stage">
+      <div class="proj-main">
+        <p class="proj-stem">求曲线 y = x² 在点 (1, 1) 处的切线方程。</p>
+        <div class="proj-steps">
+          <div class="proj-step">① 切点 (1, 1)，f(x) = x²</div>
+          <div class="proj-step current">② f′(x) = 2x，故 k = 2</div>
+          <div class="proj-step ghost">③ （未揭示）</div>
+        </div>
+        <svg class="annotate-layer" viewBox="0 0 800 400" aria-hidden="true">
+          <ellipse cx="420" cy="168" rx="110" ry="36" fill="none" stroke="#ff7043" stroke-width="4" opacity="0.85"/>
+          <path d="M200 280 Q 320 240 480 300" fill="none" stroke="#ffca28" stroke-width="3" opacity="0.9"/>
+        </svg>
+      </div>
+      <aside class="proj-side">
+        <h3>要点</h3>
+        <p>切线斜率 = 导数值</p>
+        <p class="muted">未揭示内容不可见</p>
+      </aside>
+
+      <!-- 主路径控件：固定底栏，批注层不得覆盖 -->
+      <div class="proj-dock safe-dock">
+        <div class="dock-label">主路径（不被批注挡住）</div>
+        <button>上一步</button>
+        <button class="primary">下一步</button>
+        <button class="ghost">跳过动画</button>
+        <button class="ghost">答案：显示/隐藏</button>
+        <button class="ghost">上一题</button>
+        <button class="ghost">下一题</button>
+        <button class="ghost">练习</button>
+      </div>
+    </div>
+  </main>
+  <p class="note">验收：画笔开/关、颜色≥2、粗细≥2、一键清空；批注仅盖内容区；底栏「下一步 / 跳过动画 / 显隐答案」始终可点。</p>
+</body>
+</html>

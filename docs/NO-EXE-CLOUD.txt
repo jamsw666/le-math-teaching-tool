@@ -1,0 +1,5 @@
+本目录故意没有 .exe。
+
+云端 Linux 打包尝试结果（2026-10-11）：blocked。
+原因见 docs/packaging-windows.md §8 与 status/board.md。
+请将 ../math-teaching-tool-src.tar.gz 拷到 Windows 后 npm run tauri:build。

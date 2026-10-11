@@ -1,0 +1,45 @@
+/* 关键步骤动画：淡入 + 轻微上滑；可被跳过类覆盖 */
+
+.step-item--anim {
+  animation: step-in 0.45s ease-out both;
+}
+
+.step-item--instant {
+  animation: none;
+  opacity: 1;
+  transform: none;
+}
+
+.concept-card.step-item--anim {
+  animation: step-in 0.4s ease-out both;
+}
+
+@keyframes step-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.step-item--current {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+.concept-card--current {
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .step-item--anim,
+  .concept-card.step-item--anim {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}

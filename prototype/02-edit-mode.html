@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<title>编辑态</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#1a2332;color:#1a1a1a;min-height:100vh}
+  .app{max-width:1280px;margin:0 auto;min-height:800px;background:#f4f6f9;display:flex;flex-direction:column}
+  .top{height:56px;background:#0f2744;color:#fff;display:flex;align-items:center;padding:0 20px;gap:16px}
+  .top .brand{font-weight:700;font-size:16px;letter-spacing:.02em}
+  .top .nav{display:flex;gap:8px;margin-left:24px}
+  .top .nav span{padding:6px 12px;border-radius:6px;font-size:13px;opacity:.75}
+  .top .nav span.on{background:#2b6cb0;opacity:1}
+  .top .right{margin-left:auto;display:flex;gap:10px;align-items:center;font-size:13px}
+  .btn{border:none;border-radius:8px;padding:8px 14px;font-size:13px;cursor:default;font-weight:600}
+  .btn-primary{background:#2b6cb0;color:#fff}
+  .btn-ghost{background:rgba(255,255,255,.12);color:#fff}
+  .btn-light{background:#fff;color:#0f2744;border:1px solid #d0d7e2}
+  .btn-warn{background:#dd6b20;color:#fff}
+  .btn-ok{background:#2f855a;color:#fff}
+  .main{flex:1;padding:20px;display:flex;gap:16px}
+  .card{background:#fff;border-radius:12px;border:1px solid #e2e8f0;box-shadow:0 1px 2px rgba(15,39,68,.06)}
+  .label{font-size:12px;color:#64748b;margin-bottom:6px}
+  .title{font-size:18px;font-weight:700;color:#0f2744}
+  .mute{color:#64748b;font-size:13px}
+  .chip{display:inline-block;padding:2px 8px;border-radius:999px;background:#ebf4ff;color:#2b6cb0;font-size:12px;font-weight:600}
+  .chip-green{background:#f0fff4;color:#2f855a}
+  .chip-orange{background:#fffaf0;color:#c05621}
+  .wire-tag{position:fixed;top:8px;right:8px;z-index:99;background:#dd6b20;color:#fff;font-size:11px;padding:4px 8px;border-radius:4px;font-weight:700}
+</style>
+</head>
+<body>
+<div class="wire-tag">原型线框 · 非工程</div>
+
+<div class="app">
+  <div class="top">
+    <div class="brand">第1节 · 导数的概念</div>
+    <div class="nav"><span class="on">编辑</span><span>预览投影</span></div>
+    <div class="right"><button class="btn btn-ghost">返回列表</button><button class="btn btn-primary">保存</button></div>
+  </div>
+  <div class="main">
+    <div style="width:220px;display:flex;flex-direction:column;gap:10px">
+      <div class="card" style="padding:12px">
+        <div class="label">本课结构</div>
+        <div style="font-size:13px;line-height:1.9">
+          <div style="background:#ebf4ff;padding:4px 8px;border-radius:6px;font-weight:600">① 概念：导数定义</div>
+          <div style="padding:4px 8px">② 例题1 · 平均变化率</div>
+          <div style="padding:4px 8px">③ 例题2 · 瞬时变化率</div>
+          <div style="padding:4px 8px">④ 练习卡 ×3</div>
+        </div>
+        <button class="btn btn-light" style="width:100%;margin-top:10px">＋ 添加块</button>
+      </div>
+    </div>
+    <div class="card" style="flex:1;padding:20px;display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="title" style="font-size:16px">编辑 · 例题1</div>
+        <span class="chip">分步揭示 · 关键步骤动画</span>
+      </div>
+      <div>
+        <div class="label">题干</div>
+        <div style="border:1px solid #d0d7e2;border-radius:8px;padding:12px;min-height:56px;background:#fafbfc">已知函数 f(x)=x²，求从 x=1 到 x=1+h 的平均变化率。</div>
+      </div>
+      <div>
+        <div class="label">解答步骤（上课时逐步显示）</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="border:1px solid #d0d7e2;border-radius:8px;padding:10px;display:flex;gap:10px;align-items:center">
+            <span class="chip">步骤1</span><span>写出平均变化率公式</span><span class="mute" style="margin-left:auto">动画：淡入</span>
+          </div>
+          <div style="border:1px solid #2b6cb0;border-radius:8px;padding:10px;display:flex;gap:10px;align-items:center;background:#f7fbff">
+            <span class="chip">步骤2</span><span>代入 f(1)、f(1+h)</span><span class="mute" style="margin-left:auto">动画：高亮变形</span>
+          </div>
+          <div style="border:1px solid #d0d7e2;border-radius:8px;padding:10px;display:flex;gap:10px;align-items:center">
+            <span class="chip">步骤3</span><span>化简得到 2+h</span><span class="mute" style="margin-left:auto">动画：箭头指引</span>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-light">编辑公式</button>
+        <button class="btn btn-light">＋ 步骤</button>
+        <button class="btn btn-primary">预览投影</button>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
