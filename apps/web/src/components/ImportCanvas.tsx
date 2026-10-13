@@ -1,3 +1,4 @@
+import { useCallback, useEffect, useRef, useState } from 'react'
 import type { Lesson, LessonCanvas } from '../types'
 import { Illustration } from './Illustrations'
 import { DEMO_IMPORT_PACK } from '../data/lessons'
@@ -89,7 +90,30 @@ interface CanvasProps {
 
 const GOAL_MARKS = ['①', '②', '③', '④', '⑤']
 
-/** 07：教材示例感画布（节标题 / 例题框 / 插图，非空白编辑器） */
+type PosMap = Record<string, { x: number; y: number }>
+
+function posKey(lessonId: string) {
+  return `math-canvas-pos:${lessonId}`
+}
+
+function loadPositions(lessonId: string, canvas: LessonCanvas): PosMap {
+  const base: PosMap = {}
+  for (const b of canvas.blocks) base[b.id] = { x: b.x, y: b.y }
+  try {
+    const raw = localStorage.getItem(posKey(lessonId))
+    if (!raw) return base
+    const saved = JSON.parse(raw) as PosMap
+    return { ...base, ...saved }
+  } catch {
+    return base
+  }
+}
+
+function savePositions(lessonId: string, positions: PosMap) {
+  localStorage.setItem(posKey(lessonId), JSON.stringify(positions))
+}
+
+/** 07：教材示例感画布 · S1 纸感块 + 可拖 · 坐标按课时存 localStorage */
 export function LessonCanvasView({
   lesson,
   canvas,
@@ -97,6 +121,78 @@ export function LessonCanvasView({
   onWorkbench,
   onProjection,
 }: CanvasProps) {
+  const [positions, setPositions] = useState<PosMap>(() =>
+    loadPositions(lesson.id, canvas),
+  )
+  const dragRef = useRef<{
+    id: string
+    ox: number
+    oy: number
+    startX: number
+    startY: number
+  } | null>(null)
+  const [draggingId, setDraggingId] = useState<string | null>(null)
+
+  useEffect(() => {
+    setPositions(loadPositions(lesson.id, canvas))
+  }, [lesson.id, canvas])
+
+  const onPointerDown = useCallback(
+    (e: React.PointerEvent, id: string) => {
+      if ((e.target as HTMLElement).closest('button, a, input')) return
+      e.preventDefault()
+      const pos = positions[id]
+      if (!pos) return
+      ;(e.currentTarget as HTMLElement).setPointerCapture(e.pointerId)
+      dragRef.current = {
+        id,
+        ox: pos.x,
+        oy: pos.y,
+        startX: e.clientX,
+        startY: e.clientY,
+      }
+      setDraggingId(id)
+    },
+    [positions],
+  )
+
+  const onPointerMove = useCallback((e: React.PointerEvent) => {
+    const d = dragRef.current
+    if (!d) return
+    const dx = e.clientX - d.startX
+    const dy = e.clientY - d.startY
+    const next = {
+      x: Math.max(0, d.ox + dx),
+      y: Math.max(0, d.oy + dy),
+    }
+    setPositions((prev) => ({ ...prev, [d.id]: next }))
+  }, [])
+
+  const onPointerUp = useCallback(
+    (e: React.PointerEvent) => {
+      if (!dragRef.current) return
+      try {
+        ;(e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId)
+      } catch {
+        /* ignore */
+      }
+      dragRef.current = null
+      setDraggingId(null)
+      setPositions((prev) => {
+        savePositions(lesson.id, prev)
+        return prev
+      })
+    },
+    [lesson.id],
+  )
+
+  const resetLayout = () => {
+    const base: PosMap = {}
+    for (const b of canvas.blocks) base[b.id] = { x: b.x, y: b.y }
+    setPositions(base)
+    savePositions(lesson.id, base)
+  }
+
   return (
     <div className="canvas-page">
       <header className="app-topbar">
@@ -119,40 +215,52 @@ export function LessonCanvasView({
       <div className="canvas-wrap">
         <div className="canvas-toolbar">
           <span className="chip">画布布局</span>
-          <span>教材示例组织 · 拖块仅为示意（本原型固定排布）</span>
+          <span>纸感卡片 · 拖动块可改位置（按课时记住）</span>
+          <button type="button" className="btn btn--ghost" onClick={resetLayout}>
+            重置位置
+          </button>
           <span className="muted" style={{ marginLeft: 'auto' }}>
             块：情境 → 旧知 → 新问 → 目标
           </span>
         </div>
 
         <div className="lesson-canvas" role="region" aria-label="课时画布">
-          {canvas.blocks.map((b) => (
-            <div
-              key={b.id}
-              className={`canvas-block canvas-block--${b.tagTone ?? 'orange'}`}
-              style={{ left: b.x, top: b.y, width: b.w }}
-            >
-              <div className="canvas-tag">{b.tag}</div>
-              <h3>{b.title}</h3>
-              <p>{b.body}</p>
-              {b.formulaPlain && <div className="canvas-formula">{b.formulaPlain}</div>}
-              {b.illustrationId && (
-                <div className="canvas-illus">
-                  <Illustration id={b.illustrationId} />
-                </div>
-              )}
-              {b.id === 'b4' && (
-                <div className="canvas-goals">
-                  {canvas.goals.map((g, i) => (
-                    <div key={g} className="canvas-goal">
-                      <b>{GOAL_MARKS[i] ?? `${i + 1}.`}</b> {g}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
-          <p className="canvas-tip-footer muted">课时：{lesson.title}</p>
+          {canvas.blocks.map((b) => {
+            const pos = positions[b.id] ?? { x: b.x, y: b.y }
+            return (
+              <div
+                key={b.id}
+                className={`canvas-block canvas-block--${b.tagTone ?? 'orange'} ${
+                  draggingId === b.id ? 'canvas-block--dragging' : ''
+                }`}
+                style={{ left: pos.x, top: pos.y, width: b.w }}
+                onPointerDown={(e) => onPointerDown(e, b.id)}
+                onPointerMove={onPointerMove}
+                onPointerUp={onPointerUp}
+                onPointerCancel={onPointerUp}
+              >
+                <div className="canvas-tag">{b.tag}</div>
+                <h3>{b.title}</h3>
+                <p>{b.body}</p>
+                {b.formulaPlain && <div className="canvas-formula">{b.formulaPlain}</div>}
+                {b.illustrationId && (
+                  <div className="canvas-illus">
+                    <Illustration id={b.illustrationId} />
+                  </div>
+                )}
+                {b.id === 'b4' && (
+                  <div className="canvas-goals">
+                    {canvas.goals.map((g, i) => (
+                      <div key={g} className="canvas-goal">
+                        <b>{GOAL_MARKS[i] ?? `${i + 1}.`}</b> {g}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )
+          })}
+          <p className="canvas-tip-footer muted">课时：{lesson.title} · 拖拽块移动</p>
         </div>
       </div>
     </div>

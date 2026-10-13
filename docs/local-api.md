@@ -17,6 +17,7 @@
 | Rust 仓库 + commands | `src-tauri/src/storage.rs`、`commands.rs` | **已实现**；`cargo test` 过 I1 |
 | 前端 adapter | `apps/web/src/api/lessonClient.ts` | **已实现**：Tauri `invoke` / 内存 mock 自动切换 |
 | 完整 Tauri 壳（WebView） | `src-tauri`（`main.rs` + `desktop` feature） | **源码已补**；云端未产出 exe，Win 本机按 `docs/packaging-windows.md` |
+| ExplanationProvider `ai_*` | `src-tauri/src/ai.rs` | **已实现**；密钥本地文件；`cargo test` 含错误码/截断/mock HTTP |
 | Spring / Java | — | **不做（MVP）** |
 
 ---
@@ -50,6 +51,12 @@ interface LessonRepository {
 | `delete_lesson` | `deleteLesson` | ✅ | 同上 |
 | `import_sample` | `importSample` | ✅ | 同上 |
 | `export_lesson` | `exportLesson` | ✅ | 同上 |
+| `ai_get_settings` | — | ✅ | 设置页非密钥 |
+| `ai_save_settings` | — | ✅ | 同上 |
+| `ai_set_api_key` | — | ✅ | 密钥进应用私有目录 |
+| `ai_clear_api_key` | — | ✅ | 清除密钥 |
+| `ai_has_api_key` | — | ✅ bool | 灰显；**勿回传明文** |
+| `ai_explain` | — | ✅ | OpenAI 兼容；I10 只传片段 |
 
 前端通过 `@tauri-apps/api/core` 的 `invoke(name, args)` 调用（仅壳内）；纯浏览器走 mock。
 
@@ -107,3 +114,40 @@ interface LessonRepository {
 4. **不要**假设存在 `http://localhost:8080` 等 Spring API
 5. 公式块用 `template` + `slots`；老师 UI 不展示 `texInternal`
 6. UI 类型与 core 不一致时走 `api/mapper.ts`（对齐债）
+
+---
+
+## 5. ExplanationProvider（`ai_*`）
+
+契约：`../specs/math-teaching-tool-explanation-provider.md`（I6'/I10/I11）。
+
+### 存储
+
+| 文件 | 内容 |
+|---|---|
+| `{appData}/ai/settings.json` | `enabled`, `provider`, `baseUrl`, `model`, `timeoutMs`（默认 20000） |
+| `{appData}/ai/api_key` | 明文密钥文件；Unix 尽量 `0600`；**永不**写入日志 |
+
+### invoke 一览
+
+| Command | 入参（camelCase） | 出参 |
+|---|---|---|
+| `ai_get_settings` | — | `AiSettings` |
+| `ai_save_settings` | `{ settings: AiSettings }` | `()` |
+| `ai_set_api_key` | `{ apiKey: string }` | `()` |
+| `ai_clear_api_key` | — | `()` |
+| `ai_has_api_key` | — | `boolean`（仅有无，无明文） |
+| `ai_explain` | `{ req: ExplainRequest }` | `ExplainResult` |
+
+`ExplainRequest`：`{ text, scope: "snippet"|"step"|"concept", context?, timeoutMs? }`  
+`ExplainResult`：`{ ok:true, text, model?, latencyMs? }` 或 `{ ok:false, code, message }`  
+`code`：`disabled` / `no_api_key` / `offline` / `timeout` / `unauthorized` / `rate_limited` / `quota` / `bad_request` / `upstream` / `cancelled`
+
+### 前端对接注意
+
+1. 壳内：`invoke('ai_explain', { req })`、`invoke('ai_set_api_key', { apiKey })`、`invoke('ai_save_settings', { settings })`；**密钥不要再存 localStorage**（迁移：先 `ai_set_api_key`，再清 localStorage）
+2. 灰显用 `invoke('ai_has_api_key')` + settings.enabled；**不要**读回 apiKey
+3. 失败 `message` 可直接 toast；主路径（步进/投影）零依赖
+4. HTTPS：本机 Windows 打包建议 `--features "desktop,ai-tls"`（见 `docs/packaging-windows.md`）；云端 rustc 1.85 默认无 TLS 以便 `cargo test`
+5. **不上 Spring**
+

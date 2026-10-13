@@ -78,7 +78,7 @@ export interface Lesson {
 }
 
 export type WorkbenchTab = 'canvas' | 'concepts' | 'examples' | 'practice' | 'formula'
-export type ViewMode = 'list' | 'import' | 'workbench' | 'projection'
+export type ViewMode = 'list' | 'import' | 'workbench' | 'projection' | 'settings'
 
 export type AnnotColor = '#ef4444' | '#fbbf24' | '#60a5fa' | '#22c55e'
 export type AnnotWidth = 3 | 6

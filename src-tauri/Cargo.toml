@@ -22,6 +22,9 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 thiserror = "2"
 tauri = { version = "2", optional = true }
+# ExplanationProvider HTTP。默认无 TLS，保证 rustc 1.85 下 cargo test；
+# Win 本机（rustc≥1.90）打壳时开 feature ai-tls 以访问 https://api.deepseek.com
+ureq = { version = "2.12", default-features = false, features = ["json"] }
 
 [build-dependencies]
 tauri-build = { version = "2", optional = true }
@@ -33,3 +36,5 @@ tempfile = "3"
 default = []
 # 完整桌面壳：仅在有 WebView 系统库（Windows WebView2 / Linux webkit2gtk）时启用
 desktop = ["dep:tauri", "dep:tauri-build"]
+# HTTPS（rustls）；需较新 rustc。Windows 打包建议：--features "desktop,ai-tls"
+ai-tls = ["ureq/tls", "ureq/gzip"]

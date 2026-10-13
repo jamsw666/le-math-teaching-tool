@@ -27,6 +27,10 @@ interface Props {
   onNextStep: () => void
   onToggleAnswer: () => void
   onSkipAnimation: () => void
+  onOpenScratch?: () => void
+  onCloseScratch?: () => void
+  scratchOpen?: boolean
+  onSettings?: () => void
 }
 
 const TABS: { id: WorkbenchTab; label: string }[] = [
@@ -66,6 +70,20 @@ export function Workbench(props: Props) {
           {lesson.canvas && (
             <button type="button" className="btn" onClick={props.onOpenCanvas}>
               画布
+            </button>
+          )}
+          <button
+            type="button"
+            className={`btn ${props.scratchOpen ? 'btn--primary' : ''}`}
+            onClick={() =>
+              props.scratchOpen ? props.onCloseScratch?.() : props.onOpenScratch?.()
+            }
+          >
+            草稿
+          </button>
+          {props.onSettings && (
+            <button type="button" className="btn" onClick={props.onSettings}>
+              设置
             </button>
           )}
           <button type="button" className="btn btn--primary" onClick={onProjection}>
