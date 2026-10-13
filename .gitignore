@@ -1,39 +1,33 @@
 
-# deps / build
-node_modules/
-dist/
-**/dist/
-apps/web/dist/
-target/
-src-tauri/target/
-src-tauri/gen/
-
+!.env.example
+# IDE
 # data / secrets
+# deps / build
+# tauri gen (if any)
+# tooling
+**/dist/
+*.AppImage
 *.db
 *.db-journal
-*.sqlite
-packages/core/storage/data/
-.env
-.env.*
-!.env.example
-
-# OS junk
-.DS_Store
-Thumbs.db
-desktop.ini
-ehthumbs.db
-
-# IDE / tooling
-.idea/
-.vscode/
-.cache/
-.npm/
-*.swp
-*.log
-
-# installers
-*.AppImage
 *.dmg
 *.exe
+*.log
 *.msi
 *.nsis.zip
+*.sqlite
+*.swp
+.DS_Store
+.cache/
+.env
+.env.*
+.idea/
+.npm/
+.vscode/
+Thumbs.db
+apps/web/dist/
+dist/
+node_modules/
+packages/core/storage/data/
+src-tauri/gen/
+src-tauri/target/
+target/

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<title>S4 夜课护眼 · 阿乐老师的数学课堂</title>
+<style>
+
+:root {
+  --bg: #1c1f26;
+  --paper: #262a33;
+  --ink: #d4d7de;
+  --muted: #8a909c;
+  --accent: #6b9ac4;
+  --accent2: #7eb8a2;
+  --line: #343944;
+  --shadow: rgba(0,0,0,.4);
+  --mask: rgba(10,12,16,.5);
+  --scratch-bg: #22262f;
+  --dock-bg: #1a1d24;
+  --formula: #a8c8e0;
+  --sans: "Noto Sans CJK SC", "Noto Sans", sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1280px;height:800px;overflow:hidden;background:#12141a}
+body{font-family:var(--sans);color:var(--ink)}
+.badge{position:fixed;top:64px;right:352px;z-index:50;background:#4a6fa5;color:#e8ecf2;font-size:11px;font-weight:700;padding:5px 10px;border-radius:4px}
+.frame{width:1280px;height:800px;background:var(--bg);position:relative}
+.topbar{height:56px;display:flex;align-items:center;padding:0 22px 0 22px;border-bottom:1px solid var(--line);background:#181b22}
+.brand{display:flex;align-items:baseline;gap:8px}
+.app-name{font-size:16px;font-weight:700;color:#e0e3ea;letter-spacing:.03em}
+.sep{color:var(--muted)}
+.mode{font-size:13px;color:var(--muted)}
+.top-actions{margin-left:auto;display:flex;gap:8px}
+.chip{border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600;font-family:inherit}
+.chip.danger{background:#3d2a2a;color:#d4a0a0;border-color:#5a3a3a}
+.stage-wrap{position:relative;height:744px;overflow:hidden}
+.mask{position:absolute;inset:0 340px 0 0;background:var(--mask);z-index:5;pointer-events:none}
+.stage{position:absolute;inset:0;padding:24px 360px 24px 28px;display:flex;flex-direction:column;gap:16px}
+.canvas{flex:1;position:relative}
+.block{position:absolute;background:var(--paper);border:1px solid var(--line);border-radius:16px;
+  box-shadow:0 8px 28px var(--shadow);padding:18px 20px}
+.b1{left:14px;top:10px;width:510px;transform:rotate(-.5deg)}
+.b2{left:70px;top:170px;width:450px;transform:rotate(.9deg);border-color:#3d5568;
+  box-shadow:0 0 0 1px rgba(107,154,196,.15), 0 8px 28px var(--shadow)}
+.b3{left:400px;top:365px;width:300px;transform:rotate(-1deg)}
+.b-label{font-size:12px;color:var(--accent);font-weight:600;margin-bottom:8px;opacity:.9}
+.b-title{font-size:21px;line-height:1.5;font-weight:600;color:#e2e5ec}
+.formula{font-size:26px;font-weight:700;color:var(--formula)}
+.hint{margin-top:8px;font-size:12px;color:var(--muted)}
+.b-body{font-size:14px;line-height:1.7;color:#b0b5c0}
+.dock{position:relative;z-index:20;display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--dock-bg);border-radius:14px;border:1px solid var(--line)}
+.dock-btn{border:1px solid var(--line);background:var(--paper);padding:10px 16px;border-radius:10px;font-size:13px;font-weight:600;font-family:inherit;color:var(--ink)}
+.dock-btn.primary{background:var(--accent);color:#12141a;border-color:var(--accent);font-weight:700}
+.dock-btn.accent{background:transparent;color:var(--accent2);border-color:#3d5a4e}
+.dock-meta{margin-left:auto;font-size:12px;color:var(--muted)}
+.scratch{position:absolute;top:0;right:0;width:340px;height:100%;z-index:10;background:var(--scratch-bg);
+  border-left:1px solid var(--line);box-shadow:-12px 0 36px rgba(0,0,0,.45);display:flex;flex-direction:column;padding:16px}
+.scratch-head{display:flex;align-items:baseline;gap:8px;margin-bottom:12px}
+.scratch-head strong{font-size:15px;color:#dce0e8}
+.scratch-sub{font-size:11px;color:var(--muted)}
+.scratch-close{margin-left:auto;border:none;background:transparent;font-size:20px;color:var(--muted)}
+.scratch-tools{display:flex;gap:6px;align-items:center;margin-bottom:12px}
+.tool{font-size:11px;padding:4px 8px;border-radius:6px;border:1px solid var(--line);background:var(--paper);color:var(--muted);font-weight:600}
+.tool.on{background:var(--accent);color:#12141a;border-color:var(--accent)}
+.swatch{width:14px;height:14px;border-radius:50%;border:1px solid var(--line)}
+.swatch.s1{background:#d4d7de}.swatch.s2{background:#6b9ac4}.swatch.s3{background:#7eb8a2}
+.scratch-pad{flex:1;border:1px solid var(--line);border-radius:12px;background:#1a1d24;padding:12px;color:#9aa3b0;
+  background-image:repeating-linear-gradient(transparent,transparent 27px,rgba(138,144,156,.08) 27px,rgba(138,144,156,.08) 28px)}
+.doodle{width:100%;height:140px;display:block}
+.calc-line{margin-top:8px;font-size:14px;font-weight:600;color:var(--formula);padding:8px 10px;background:var(--paper);border-radius:8px;border:1px solid var(--line)}
+.ai-panel{position:absolute;left:28px;bottom:92px;z-index:25;width:260px;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:0 10px 28px var(--shadow)}
+.ai-title{font-size:13px;font-weight:700;color:var(--accent);margin-bottom:10px}
+.ai-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;margin-bottom:8px}
+.ai-row.muted{color:var(--muted)}
+.svc{font-weight:600;color:var(--accent2);font-size:11px}
+.ai-note{font-size:10px;color:var(--muted);margin-top:4px;line-height:1.4}
+.toggle{position:relative;width:40px;height:22px;display:inline-block}
+.toggle input{opacity:0;width:0;height:0}
+.knob{position:absolute;inset:0;background:var(--accent);border-radius:999px}
+.knob:before{content:"";position:absolute;width:16px;height:16px;left:20px;top:3px;background:#e8ecf2;border-radius:50%}
+
+</style>
+</head>
+<body>
+
+<div class="badge">风格探索原型 · 非工程</div>
+<div class="frame">
+  <header class="topbar">
+    <div class="brand">
+      <span class="app-name">阿乐老师的数学课堂</span>
+      <span class="sep">·</span>
+      <span class="mode">投影讲题 · 第1节 导数的概念</span>
+    </div>
+    <div class="top-actions">
+      <button class="chip">草稿</button>
+      <button class="chip">批注</button>
+      <button class="chip danger">退出投影</button>
+    </div>
+  </header>
+
+  <div class="stage-wrap">
+    <!-- dim mask over canvas when draft open -->
+    <div class="mask"></div>
+
+    <main class="stage">
+      <div class="canvas">
+        <!-- draggable-looking blocks, staggered -->
+        <div class="block b1">
+          <div class="b-label">例题 1 / 2</div>
+          <div class="b-title">已知 f(x)=x²，求从 x=1 到 x=1+h 的平均变化率。</div>
+        </div>
+        <div class="block b2">
+          <div class="b-label">当前步骤 2 / 3</div>
+          <div class="formula">= [f(1+h) − f(1)] / h</div>
+          <div class="hint">上一步已淡出 · 本步高亮</div>
+        </div>
+        <div class="block b3">
+          <div class="b-label">要点卡片</div>
+          <div class="b-body">平均变化率表示函数在某一段上的「平均快慢」。先平均，再过渡到瞬时（导数）。</div>
+        </div>
+      </div>
+
+      <div class="dock">
+        <button class="dock-btn">上一步</button>
+        <button class="dock-btn primary">下一步</button>
+        <button class="dock-btn">跳过动画</button>
+        <button class="dock-btn accent">显隐答案</button>
+        <span class="dock-meta">答案：隐藏中</span>
+      </div>
+    </main>
+
+    <!-- draft sidebar -->
+    <aside class="scratch">
+      <div class="scratch-head">
+        <strong>草稿本</strong>
+        <span class="scratch-sub">上课演算 · 不写入例题</span>
+        <button class="scratch-close">×</button>
+      </div>
+      <div class="scratch-tools">
+        <span class="tool on">笔</span>
+        <span class="tool">橡皮</span>
+        <span class="tool">清空</span>
+        <span class="swatch s1"></span>
+        <span class="swatch s2"></span>
+        <span class="swatch s3"></span>
+      </div>
+      <div class="scratch-pad">
+        <svg class="doodle" viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 40 Q60 10 100 50 T180 40" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" opacity=".85"/>
+          <path d="M40 90 L120 70 L200 110" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" opacity=".7"/>
+          <circle cx="210" cy="55" r="28" fill="none" stroke="currentColor" stroke-width="2" opacity=".65"/>
+          <path d="M30 130 Q90 150 160 120" fill="none" stroke="currentColor" stroke-width="1.8" stroke-dasharray="4 3" opacity=".5"/>
+        </svg>
+        <div class="calc-line">演算： (1+h)² − 1 = 2h + h²</div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- AI settings float -->
+  <div class="ai-panel">
+    <div class="ai-title">AI 释义设置</div>
+    <div class="ai-row">
+      <span>开启 AI 释义</span>
+      <label class="toggle"><input type="checkbox" checked disabled/><span class="knob"></span></label>
+    </div>
+    <div class="ai-row muted">
+      <span>服务商</span>
+      <span class="svc">DeepSeek（可选联网）</span>
+    </div>
+    <div class="ai-note">离线底可用 · 释义需联网时再开</div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -6,7 +6,8 @@
 #[cfg(feature = "desktop")]
 mod desktop {
     use math_teaching_tool_storage::{
-        commands, Lesson, LessonMeta, LessonSampleFile, OkResponse, ProjectionLessonView, Store,
+        commands, AiPaths, AiSettings, ExplainRequest, ExplainResult, Lesson, LessonMeta,
+        LessonSampleFile, OkResponse, ProjectionLessonView, Store,
     };
     use std::path::PathBuf;
     use std::sync::Mutex;
@@ -14,6 +15,7 @@ mod desktop {
 
     pub struct AppState {
         pub store: Mutex<Store>,
+        pub ai: AiPaths,
     }
 
     fn map_err(e: impl ToString) -> String {
@@ -81,7 +83,39 @@ mod desktop {
         commands::export_lesson(&store, &id).map_err(map_err)
     }
 
-    fn open_store(app: &tauri::App) -> Result<Store, String> {
+    // ——— ExplanationProvider（密钥不出 renderer）———
+
+    #[tauri::command(rename_all = "camelCase")]
+    pub fn ai_get_settings(state: State<'_, AppState>) -> AiSettings {
+        math_teaching_tool_storage::ai_get_settings(&state.ai)
+    }
+
+    #[tauri::command(rename_all = "camelCase")]
+    pub fn ai_save_settings(state: State<'_, AppState>, settings: AiSettings) -> Result<(), String> {
+        math_teaching_tool_storage::ai_save_settings(&state.ai, settings)
+    }
+
+    #[tauri::command(rename_all = "camelCase")]
+    pub fn ai_set_api_key(state: State<'_, AppState>, api_key: String) -> Result<(), String> {
+        math_teaching_tool_storage::ai_set_api_key(&state.ai, api_key)
+    }
+
+    #[tauri::command(rename_all = "camelCase")]
+    pub fn ai_clear_api_key(state: State<'_, AppState>) -> Result<(), String> {
+        math_teaching_tool_storage::ai_clear_api_key(&state.ai)
+    }
+
+    #[tauri::command(rename_all = "camelCase")]
+    pub fn ai_has_api_key(state: State<'_, AppState>) -> bool {
+        math_teaching_tool_storage::ai_has_api_key(&state.ai)
+    }
+
+    #[tauri::command(rename_all = "camelCase")]
+    pub fn ai_explain(state: State<'_, AppState>, req: ExplainRequest) -> ExplainResult {
+        math_teaching_tool_storage::ai_explain(&state.ai, req)
+    }
+
+    fn open_store(app: &tauri::App) -> Result<(Store, AiPaths), String> {
         let dir: PathBuf = app
             .path()
             .app_data_dir()
@@ -96,15 +130,19 @@ mod desktop {
                 let _ = store.import_sample(&sample);
             }
         }
-        Ok(store)
+        let ai_dir = dir.join("ai");
+        let ai = AiPaths::new(ai_dir);
+        ai.ensure_dir().map_err(map_err)?;
+        Ok((store, ai))
     }
 
     pub fn run() {
         tauri::Builder::default()
             .setup(|app| {
-                let store = open_store(app)?;
+                let (store, ai) = open_store(app)?;
                 app.manage(AppState {
                     store: Mutex::new(store),
+                    ai,
                 });
                 Ok(())
             })
@@ -117,6 +155,12 @@ mod desktop {
                 delete_lesson,
                 import_sample,
                 export_lesson,
+                ai_get_settings,
+                ai_save_settings,
+                ai_set_api_key,
+                ai_clear_api_key,
+                ai_has_api_key,
+                ai_explain,
             ])
             .run(tauri::generate_context!())
             .expect("error while running tauri application");

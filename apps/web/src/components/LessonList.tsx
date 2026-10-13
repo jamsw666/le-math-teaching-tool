@@ -7,19 +7,32 @@ interface Props {
   onOpenCanvas: (id: string) => void
   onProjection: (id: string) => void
   onImport: () => void
+  onSettings: () => void
 }
 
-export function LessonList({ lessons, onOpen, onOpenCanvas, onProjection, onImport }: Props) {
+export function LessonList({
+  lessons,
+  onOpen,
+  onOpenCanvas,
+  onProjection,
+  onImport,
+  onSettings,
+}: Props) {
   return (
     <div className="lesson-list">
       <header className="app-topbar">
         <div className="brand">{APP_NAME}</div>
         <nav className="top-nav">
           <span className="on">课时</span>
-          <span>设置</span>
+          <button type="button" className="nav-link" onClick={onSettings}>
+            设置
+          </button>
         </nav>
         <div className="topbar-right">
           <span className="muted">离线可用</span>
+          <button type="button" className="btn" onClick={onSettings}>
+            设置
+          </button>
           <button type="button" className="btn" onClick={onImport}>
             导入课程
           </button>

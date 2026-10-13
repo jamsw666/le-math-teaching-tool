@@ -167,3 +167,12 @@ Linux 本机若要打 **Linux** 调试包（非交付主路径），需先安装
 - `apps/web/src/api/lessonClient.ts`：有 `window.__TAURI_INTERNALS__` 时走 `invoke`
 - `tauri.conf.json` 已设 `withGlobalTauri: true`；仍建议安装 `@tauri-apps/api`
 - command 名见 `docs/local-api.md`（`list_lessons` 等）
+
+## AI 释义 HTTPS（可选）
+
+默认 `ureq` 无 TLS，便于云端 `cargo test`（rustc 1.85）。Windows 本机访问 DeepSeek 等 HTTPS 时，打包启用：
+
+```powershell
+cargo tauri build --features "desktop,ai-tls"
+# 或在 Cargo.toml / tauri 配置中把 ai-tls 绑进 desktop
+```

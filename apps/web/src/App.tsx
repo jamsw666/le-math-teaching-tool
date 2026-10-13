@@ -5,6 +5,9 @@ import { LessonList } from './components/LessonList'
 import { Workbench } from './components/Workbench'
 import { ProjectionMode } from './components/ProjectionMode'
 import { ImportFlow, LessonCanvasView } from './components/ImportCanvas'
+import { ScratchPad } from './components/ScratchPad'
+import { Settings } from './components/Settings'
+import { WelcomeSplash } from './components/WelcomeSplash'
 import './styles/animations.css'
 
 function App() {
@@ -16,6 +19,8 @@ function App() {
   const [stepReveal, setStepReveal] = useState(0)
   const [showAnswer, setShowAnswer] = useState(false)
   const [skipAnimation, setSkipAnimation] = useState(false)
+  const [scratchOpen, setScratchOpen] = useState(false)
+  const [showWelcome, setShowWelcome] = useState(true)
 
   const lesson: Lesson | undefined = useMemo(
     () => SAMPLE_LESSONS.find((l) => l.id === lessonId),
@@ -70,25 +75,50 @@ function App() {
     setSkipAnimation(false)
   }
 
+  const scratch = (
+    <ScratchPad open={scratchOpen} onClose={() => setScratchOpen(false)} />
+  )
+
+  const welcome = showWelcome ? (
+    <WelcomeSplash onEnter={() => setShowWelcome(false)} />
+  ) : null
+
+  if (view === 'settings') {
+    return (
+      <>
+        <Settings onBack={() => setView('list')} />
+        {welcome}
+      </>
+    )
+  }
+
   if (view === 'list') {
     return (
-      <LessonList
-        lessons={SAMPLE_LESSONS}
-        onOpen={(id) => openLesson(id, 'workbench', 'concepts')}
-        onOpenCanvas={(id) => openLesson(id, 'workbench', 'canvas')}
-        onProjection={(id) => openLesson(id, 'projection', 'examples')}
-        onImport={() => setView('import')}
-      />
+      <>
+        <LessonList
+          lessons={SAMPLE_LESSONS}
+          onOpen={(id) => openLesson(id, 'workbench', 'concepts')}
+          onOpenCanvas={(id) => openLesson(id, 'workbench', 'canvas')}
+          onProjection={(id) => openLesson(id, 'projection', 'examples')}
+          onImport={() => setView('import')}
+          onSettings={() => setView('settings')}
+        />
+        {scratch}
+        {welcome}
+      </>
     )
   }
 
   if (view === 'import') {
     return (
-      <ImportFlow
-        lessons={SAMPLE_LESSONS}
-        onCancel={() => setView('list')}
-        onOpenLesson={(id) => openLesson(id, 'workbench', 'canvas')}
-      />
+      <>
+        <ImportFlow
+          lessons={SAMPLE_LESSONS}
+          onCancel={() => setView('list')}
+          onOpenLesson={(id) => openLesson(id, 'workbench', 'canvas')}
+        />
+        {scratch}
+      </>
     )
   }
 
@@ -111,6 +141,9 @@ function App() {
     stepReveal,
     showAnswer,
     skipAnimation,
+    scratchOpen,
+    onOpenScratch: () => setScratchOpen(true),
+    onCloseScratch: () => setScratchOpen(false),
     onTab: setTab,
     onConceptRevealMore: () => {
       setSkipAnimation(false)
@@ -136,34 +169,46 @@ function App() {
   }
 
   if (view === 'projection') {
-    return <ProjectionMode {...shared} onExit={() => setView('workbench')} />
+    return (
+      <>
+        <ProjectionMode {...shared} onExit={() => setView('workbench')} />
+        {scratch}
+      </>
+    )
   }
 
   if (tab === 'canvas' && lesson.canvas) {
     return (
-      <LessonCanvasView
-        lesson={lesson}
-        canvas={lesson.canvas}
-        onBack={() => setView('list')}
-        onWorkbench={() => setTab('concepts')}
-        onProjection={() => {
-          setTab('examples')
-          setView('projection')
-        }}
-      />
+      <>
+        <LessonCanvasView
+          lesson={lesson}
+          canvas={lesson.canvas}
+          onBack={() => setView('list')}
+          onWorkbench={() => setTab('concepts')}
+          onProjection={() => {
+            setTab('examples')
+            setView('projection')
+          }}
+        />
+        {scratch}
+      </>
     )
   }
 
   return (
-    <Workbench
-      {...shared}
-      onBack={() => setView('list')}
-      onOpenCanvas={() => setTab('canvas')}
-      onProjection={() => {
-        setTab('examples')
-        setView('projection')
-      }}
-    />
+    <>
+      <Workbench
+        {...shared}
+        onBack={() => setView('list')}
+        onOpenCanvas={() => setTab('canvas')}
+        onProjection={() => {
+          setTab('examples')
+          setView('projection')
+        }}
+        onSettings={() => setView('settings')}
+      />
+      {scratch}
+    </>
   )
 }
 

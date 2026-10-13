@@ -4,6 +4,7 @@ import { ConceptCards } from './ConceptCards'
 import { ExamplePanel } from './ExamplePanel'
 import { PracticePanel } from './PracticePanel'
 import { AnnotationLayer } from './AnnotationLayer'
+import { AiExplainButton } from './Settings'
 
 interface Props {
   lesson: Lesson
@@ -24,6 +25,9 @@ interface Props {
   onNextStep: () => void
   onToggleAnswer: () => void
   onSkipAnimation: () => void
+  scratchOpen?: boolean
+  onOpenScratch?: () => void
+  onCloseScratch?: () => void
 }
 
 const COLORS: AnnotColor[] = ['#ef4444', '#fbbf24', '#60a5fa', '#22c55e']
@@ -161,6 +165,14 @@ export function ProjectionMode(props: Props) {
             清空批注
           </button>
 
+          <button
+            type="button"
+            className={`btn ${props.scratchOpen ? 'btn--primary' : ''}`}
+            onClick={() => (props.scratchOpen ? props.onCloseScratch?.() : props.onOpenScratch?.())}
+          >
+            草稿
+          </button>
+
           <button type="button" className="btn btn--ghost" onClick={onExit}>
             退出投影
           </button>
@@ -273,6 +285,19 @@ export function ProjectionMode(props: Props) {
             <button type="button" className="btn btn--ghost" onClick={onToggleAnswer}>
               {props.showAnswer ? '隐藏答案' : '显示答案'}
             </button>
+            <AiExplainButton
+              snippet={
+                props.stepReveal > 0
+                  ? (ex.steps[props.stepReveal - 1]?.caption || ex.title)
+                  : (ex.stem || ex.title)
+              }
+              scope={props.stepReveal > 0 ? 'step' : 'snippet'}
+              context={{
+                lessonTitle: lesson.title,
+                itemTitle: ex.title,
+                stepIndex: props.stepReveal > 0 ? props.stepReveal : undefined,
+              }}
+            />
             <span className="muted">
               步骤 {props.stepReveal}/{ex.steps.length}
             </span>
