@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Logback 生产配置样例（Spring Boot 项目放在 src/main/resources/logback-spring.xml）。
+  本学习工程绑定的是 slf4j-simple，此文件仅作参考，不会被加载。
+-->
+<configuration scan="true" scanPeriod="30 seconds">
+
+    <!-- 读取 Spring 配置 -->
+    <springProperty scope="context" name="APP_NAME" source="spring.application.name" defaultValue="app"/>
+    <property name="LOG_HOME" value="${LOG_HOME:-./logs}"/>
+    <!-- %X{traceId} 来自 MDC -->
+    <property name="PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] [%X{traceId:-}] %logger{36} - %msg%n"/>
+
+    <!-- 控制台：开发环境彩色输出 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %highlight(%-5level) %cyan(%logger{20}) [%X{traceId:-}] - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 文件：按天 + 按大小滚动，保留 30 天，总量不超过 10GB -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/${APP_NAME}.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/${APP_NAME}.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxFileSize>200MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>10GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- 错误单独一份，便于告警采集 -->
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/${APP_NAME}-error.log</file>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/${APP_NAME}-error.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+            <maxHistory>90</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- JSON 格式给 ELK / Loki 采集（需依赖 net.logstash.logback:logstash-logback-encoder） -->
+    <!--
+    <appender name="JSON" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/${APP_NAME}.json</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/${APP_NAME}.%d{yyyy-MM-dd}.json.gz</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <customFields>{"app":"${APP_NAME}"}</customFields>
+        </encoder>
+    </appender>
+    -->
+
+    <!-- 异步包装：业务线程只入队，IO 由单独线程完成；队列满时默认丢弃 TRACE/DEBUG/INFO -->
+    <appender name="ASYNC_FILE" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>8192</queueSize>
+        <discardingThreshold>0</discardingThreshold> <!-- 0 = 不丢弃任何级别 -->
+        <neverBlock>true</neverBlock>                <!-- 队列满时直接丢而不是阻塞业务线程 -->
+        <includeCallerData>false</includeCallerData> <!-- 行号等调用者信息很贵，默认关 -->
+        <appender-ref ref="FILE"/>
+    </appender>
+
+    <!-- 单独调整某些包的级别 -->
+    <logger name="org.springframework.web" level="INFO"/>
+    <logger name="org.hibernate.SQL" level="DEBUG"/>
+    <logger name="com.zaxxer.hikari" level="WARN"/>
+    <!-- additivity=false：不再向上传播给 root，避免重复输出 -->
+    <logger name="com.example.audit" level="INFO" additivity="false">
+        <appender-ref ref="FILE"/>
+    </logger>
+
+    <springProfile name="dev,local">
+        <root level="DEBUG">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="!dev &amp; !local">
+        <root level="INFO">
+            <appender-ref ref="ASYNC_FILE"/>
+            <appender-ref ref="ERROR_FILE"/>
+        </root>
+    </springProfile>
+
+</configuration>

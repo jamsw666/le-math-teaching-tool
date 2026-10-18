@@ -1,0 +1,93 @@
+// Jenkins 声明式流水线样例（学习参考）
+pipeline {
+    agent any
+
+    tools {
+        jdk 'temurin-21'
+        maven 'maven-3.9'
+    }
+
+    options {
+        timeout(time: 30, unit: 'MINUTES')
+        disableConcurrentBuilds()
+        buildDiscarder(logRotator(numToKeepStr: '20'))
+    }
+
+    environment {
+        IMAGE = "registry.example.com/demo/java-learning"
+        TAG   = "${env.GIT_COMMIT.take(7)}"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps { checkout scm }
+        }
+
+        stage('Build & Test') {
+            steps {
+                dir('java-learning') {
+                    sh 'mvn -B -ntp verify'
+                }
+            }
+            post {
+                always {
+                    junit 'java-learning/target/surefire-reports/*.xml'   // 测试趋势图
+                }
+            }
+        }
+
+        stage('Quality Gate') {
+            parallel {                                                      // 并行阶段
+                stage('Checkstyle') {
+                    steps { sh 'echo mvn checkstyle:check' }
+                }
+                stage('SonarQube') {
+                    steps {
+                        // withSonarQubeEnv('sonar') { sh 'mvn sonar:sonar' }
+                        // timeout(time: 5, unit: 'MINUTES') { waitForQualityGate abortPipeline: true }
+                        sh 'echo sonar scan'
+                    }
+                }
+            }
+        }
+
+        stage('Docker Build & Push') {
+            when { branch 'main' }
+            steps {
+                dir('java-learning') {
+                    sh "docker build -t ${IMAGE}:${TAG} ."
+                    withCredentials([usernamePassword(credentialsId: 'registry', usernameVariable: 'U', passwordVariable: 'P')]) {
+                        sh 'echo "$P" | docker login registry.example.com -u "$U" --password-stdin'
+                    }
+                    sh "docker push ${IMAGE}:${TAG}"
+                }
+            }
+        }
+
+        stage('Deploy to Staging') {
+            when { branch 'main' }
+            steps {
+                sh "kubectl set image deployment/demo demo=${IMAGE}:${TAG} -n staging"
+                sh "kubectl rollout status deployment/demo -n staging --timeout=120s"
+            }
+        }
+
+        stage('Deploy to Production') {
+            when { branch 'main' }
+            steps {
+                input message: '发布到生产？', ok: '发布'                   // 人工审批门禁
+                sh "kubectl set image deployment/demo demo=${IMAGE}:${TAG} -n prod"
+                sh "kubectl rollout status deployment/demo -n prod --timeout=180s"
+            }
+        }
+    }
+
+    post {
+        failure {
+            echo "通知：构建失败 ${env.JOB_NAME} #${env.BUILD_NUMBER}"      // 实际用 slackSend / 钉钉 / 企业微信
+        }
+        success {
+            echo "构建成功 ${IMAGE}:${TAG}"
+        }
+    }
+}

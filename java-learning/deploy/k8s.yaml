@@ -1,0 +1,132 @@
+# Kubernetes 部署样例（以一个 Spring Boot Web 服务为例）
+# kubectl apply -f deploy/k8s.yaml
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: demo-config
+data:
+  SPRING_PROFILES_ACTIVE: "prod"
+  JAVA_OPTS: "-XX:MaxRAMPercentage=75.0 -XX:+UseG1GC"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: demo-secret
+type: Opaque
+stringData:
+  DB_PASSWORD: "change-me"          # 生产用 Sealed Secrets / Vault / 云厂商 KMS，不要明文进 Git
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo
+  labels:
+    app: demo
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: demo
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1                   # 滚动更新时最多多出 1 个 Pod
+      maxUnavailable: 0             # 任何时刻都不减少可用副本 -> 零停机
+  template:
+    metadata:
+      labels:
+        app: demo
+    spec:
+      terminationGracePeriodSeconds: 30     # SIGTERM 后给 JVM 30s 优雅停机（Spring Boot server.shutdown=graceful）
+      containers:
+        - name: demo
+          image: registry.example.com/demo:1.0.0   # 永远用明确 tag / digest，不要 latest
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: demo-config
+          env:
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: demo-secret
+                  key: DB_PASSWORD
+          resources:
+            requests:               # 调度依据
+              cpu: "500m"
+              memory: "768Mi"
+            limits:                 # 超过 memory limit 会被 OOMKilled；JVM 的 MaxRAMPercentage 基于这个值
+              cpu: "2"
+              memory: "1Gi"
+          startupProbe:             # JVM 启动慢，先用 startupProbe 兜底，避免 liveness 过早杀掉
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            failureThreshold: 30
+            periodSeconds: 5
+          livenessProbe:            # 失败 -> 重启容器（死锁、OOM 后假死）
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            periodSeconds: 10
+          readinessProbe:           # 失败 -> 从 Service 摘流，不重启（依赖暂时不可用、预热中）
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            periodSeconds: 5
+          lifecycle:
+            preStop:
+              exec:
+                command: ["sh", "-c", "sleep 5"]   # 等 Endpoint 摘除传播完再收到 SIGTERM，避免发布时 502
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo
+spec:
+  selector:
+    app: demo
+  ports:
+    - port: 80
+      targetPort: 8080
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: demo
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+spec:
+  rules:
+    - host: demo.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: demo
+                port:
+                  number: 80
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: demo
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: demo
+  minReplicas: 3
+  maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
