@@ -1,0 +1,77 @@
+# GitHub Actions 流水线样例（放到仓库的 .github/workflows/ci.yml 才会生效；本文件仅作学习参考）
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:                       # 同一分支的旧流水线被新提交取消，省资源
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: java-learning
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: maven             # 缓存 ~/.m2，依赖不变时秒级恢复
+
+      - name: Compile + unit tests
+        run: mvn -B -ntp verify
+
+      - name: Upload test report
+        if: always()               # 即使测试失败也上传报告
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-reports
+          path: java-learning/target/surefire-reports
+
+  static-analysis:                 # 与测试并行跑，缩短总时长
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: 21, cache: maven }
+      - name: Checkstyle / SpotBugs（示意）
+        run: echo "mvn -B checkstyle:check spotbugs:check"
+
+  docker-image:
+    needs: [build-test, static-analysis]          # 质量门禁都过了才构建镜像
+    if: github.ref == 'refs/heads/main'            # 只有主分支才发布
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v5
+        with:
+          context: java-learning
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}/java-learning:${{ github.sha }}
+            ghcr.io/${{ github.repository }}/java-learning:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy-staging:
+    needs: docker-image
+    runs-on: ubuntu-latest
+    environment: staging                           # 环境保护规则：可配置人工审批、密钥隔离
+    steps:
+      - name: Deploy（示意：kubectl set image / helm upgrade / argocd app sync）
+        run: echo "kubectl set image deployment/demo demo=ghcr.io/${{ github.repository }}/java-learning:${{ github.sha }}"
